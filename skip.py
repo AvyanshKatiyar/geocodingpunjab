@@ -13,8 +13,8 @@ def cleanup(df):
     newdf=df
     return(newdf)
 
-def assign_address(df,start,length):
-    counter=[]
+def assign_address(df,start,length,order):
+    exceptions=[]
     locator = Nominatim(user_agent="myGeocoder")
     geocode = RateLimiter(locator.geocode, min_delay_seconds=0)
     index=df.index
@@ -30,7 +30,7 @@ def assign_address(df,start,length):
             address=str(row["patient_district_name"])+", Punjab, India"
             location = locator.geocode(address) 
         if location==None:
-            counter.append(row_num)
+            exceptions.append(row_num)
             pass
         else:
             point=tuple(location.point)
@@ -40,6 +40,11 @@ def assign_address(df,start,length):
             df.at[row_num,"latitude"]=latitude
             df.at[row_num,"longitude"]=longitude
             print(location,latitude,longitude)
+
+    exceptions_filename=str(order)+"_exceptions"+".txt"
+    with open(exceptions_filename,"w") as f:
+        for item in exceptions:
+            f.write(f"{item}\n")
     return df
 
 
@@ -54,8 +59,11 @@ df.insert(1,'final_address','')
 
 df1=df
 df1=cleanup(df1)
-df1=assign_address(df1,start,length)
+df1=assign_address(df1,start,length,order)
 
 output_filename=str(order)+"start"+str(start)+"end"+str(end)+".xlsx"
 
 df1.to_excel(output_filename)
+
+
+
