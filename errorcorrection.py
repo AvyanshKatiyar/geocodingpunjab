@@ -3,12 +3,11 @@ from geopy.extra.rate_limiter import RateLimiter
 from geopy.geocoders import Nominatim
 from tqdm import tqdm
 import math
-start=int(input("Start:"))
-length=int(input("Length:"))
-order=int(input("Order:"))
-end=start+length-1
 
-input_filename=str(order)+"start"+str(start)+"end"+str(end)+".xlsx"
+input_filename=input("Enter input filename:")
+
+output_filename=input("Enter output filename:")
+
 
 def correct(df,order):
     locator = Nominatim(user_agent="myGeocoder")
@@ -45,8 +44,5 @@ df=pandas.read_excel(input_filename)
 
 df1=df
 df1=correct(df1,order)
-
-
-output_filename=str(order)+"start"+str(start)+"end"+str(end)+".xlsx"
 
 df1.to_excel(output_filename)
