@@ -4,9 +4,10 @@ from geopy.geocoders import Nominatim
 from tqdm import tqdm
 import math
 
-input_filename=input("Enter input filename:")
-
-output_filename=input("Enter output filename:")
+input_filename=input("Enter input filename(without ext.):")
+input_filename=input_filename+".xlsx"
+output_filename=input("Enter output filename(without ext.):")
+output_filename=output_filename+".xlsx"
 
 
 def correct(df,order):
