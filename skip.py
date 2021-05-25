@@ -49,7 +49,7 @@ def assign_address(df,start,length,order):
 
 locator = Nominatim(user_agent="myGeocoder")
 
-df=pandas.read_excel("sample.xlsx")
+df=pandas.read_excel("./May/may_input.xlsx")
 
 df.insert(1,'longitude','')
 df.insert(1,'latitude','')
