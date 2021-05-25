@@ -14,25 +14,25 @@ def cleanup(df):
     return(newdf)
 
 def assign_address(df,start,length):
+    counter=[]
     locator = Nominatim(user_agent="myGeocoder")
     geocode = RateLimiter(locator.geocode, min_delay_seconds=0)
     index=df.index
     number_of_rows=len(index)
     for row_num in range(start,start+length):
         row= df.loc[row_num]
-        address=row["patient_address"]+", "+row["patient_block"]+", "+row["patient_district_name"]+", Punjab, India"
+        address=str(row["patient_address"])+", "+str(row["patient_block"])+", "+str(row["patient_district_name"])+", Punjab, India"
         location = locator.geocode(address)
         if location==None:
-            address=row["patient_block"]+", "+row["patient_district_name"]+", Punjab, India"
+            address=str(row["patient_block"])+", "+str(row["patient_district_name"])+", Punjab, India"
             location = locator.geocode(address)
         if location==None:
-            address=row["patient_district_name"]+", Punjab, India"
-            location = locator.geocode(address)  
-
+            address=str(row["patient_district_name"])+", Punjab, India"
+            location = locator.geocode(address) 
         if location==None:
+            counter.append(row_num)
             pass
         else:
-
             point=tuple(location.point)
             latitude=point[0]
             longitude=point[1]
@@ -40,7 +40,6 @@ def assign_address(df,start,length):
             df.at[row_num,"latitude"]=latitude
             df.at[row_num,"longitude"]=longitude
             print(location,latitude,longitude)
-
     return df
 
 
