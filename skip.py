@@ -1,6 +1,7 @@
 import pandas
 from geopy.extra.rate_limiter import RateLimiter
 from geopy.geocoders import Nominatim
+from tqdm import tqdm
 
 start=int(input("Start:"))
 length=int(input("Length:"))
@@ -9,9 +10,6 @@ end=start+length-1
 print(f"File will start from {start} and end at {end}")
 print(f"For the next iteration, use the value {end+1} as the start value")
 
-def cleanup(df):
-    newdf=df
-    return(newdf)
 
 def assign_address(df,start,length,order):
     exceptions=[]
@@ -19,7 +17,7 @@ def assign_address(df,start,length,order):
     geocode = RateLimiter(locator.geocode, min_delay_seconds=0)
     index=df.index
     number_of_rows=len(index)
-    for row_num in range(start,start+length):
+    for row_num in tqdm(range(start,start+length)):
         row= df.loc[row_num]
         address=str(row["patient_address"])+", "+str(row["patient_block"])+", "+str(row["patient_district_name"])+", Punjab, India"
         location = locator.geocode(address)
@@ -58,7 +56,6 @@ df.insert(1,'latitude','')
 df.insert(1,'final_address','')
 
 df1=df
-df1=cleanup(df1)
 df1=assign_address(df1,start,length,order)
 
 output_filename=str(order)+"start"+str(start)+"end"+str(end)+".xlsx"
